@@ -1,0 +1,62 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 253 253 242;
+    --foreground: 0 0 0;
+    --card: 253 253 242;
+    --card-foreground: 0 0 0;
+    --popover: 253 253 242;
+    --popover-foreground: 0 0 0;
+    --primary: 0 0 0;
+    --primary-foreground: 255 255 255;
+    --secondary: 252 245 242;
+    --secondary-foreground: 0 0 0;
+    --muted: 252 245 242;
+    --muted-foreground: 0 0 0;
+    --accent: 252 245 242;
+    --accent-foreground: 0 0 0;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 0 0 0;
+    --input: 0 0 0;
+    --ring: 0 0 0;
+    --radius: 0rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-cream-50 text-brand-black font-normal;
+    font-family: "Inter", system-ui, sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  .scroll-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scroll-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  .sibilla-button-primary {
+    @apply bg-brand-black text-brand-white px-4 py-2 border border-brand-black transition-all duration-200 hover:bg-brand-white hover:text-brand-black;
+  }
+
+  .sibilla-button-secondary {
+    @apply bg-transparent text-brand-black px-4 py-2 border border-brand-black transition-all duration-200 hover:bg-brand-black hover:text-brand-white;
+  }
+}
