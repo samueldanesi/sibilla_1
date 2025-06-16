@@ -1,9 +1,4 @@
-#  Sibilla Drinks - Premium React Experience
-
-Una ricreazione premium del sito https://sibilladrinks.pages.dev/ completamente ridisegnata in React con architettura modulare, CMS dinamico e animazioni di livello enterprise.
-
-##  Obiettivi della Challenge Completati
-
+#  Sibilla Drinks 
 ###  1. Ricreazione in React
 
 - **Architettura modulare** con componenti riutilizabili
