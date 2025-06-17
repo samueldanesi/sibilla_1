@@ -37,37 +37,24 @@ export function InstructionsSection({
   const [shouldAnimateStep2, setShouldAnimateStep2] = useState(false);
   const [shouldAnimateStep3, setShouldAnimateStep3] = useState(false);
 
-  // Auto-play animations when steps come into view
+  // Update animation states based on visibility
   useEffect(() => {
-    if (step1InView && !shouldAnimateStep1) {
-      setShouldAnimateStep1(true);
-    }
-  }, [step1InView, shouldAnimateStep1]);
+    if (step1InView) setShouldAnimateStep1(true);
+  }, [step1InView]);
 
   useEffect(() => {
-    if (step2InView && !shouldAnimateStep2) {
-      setShouldAnimateStep2(true);
-    }
-  }, [step2InView, shouldAnimateStep2]);
+    if (step2InView) setShouldAnimateStep2(true);
+  }, [step2InView]);
 
   useEffect(() => {
-    if (step3InView && !shouldAnimateStep3) {
-      setShouldAnimateStep3(true);
-    }
-  }, [step3InView, shouldAnimateStep3]);
+    if (step3InView) setShouldAnimateStep3(true);
+  }, [step3InView]);
 
+  // Initial section animations
   useEffect(() => {
     if (!inView) return;
 
     const ctx = gsap.context(() => {
-      // Animate section header
-      gsap.fromTo(
-        ".instructions-header",
-        { y: 50, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, ease: [0.215, 0.61, 0.355, 1] },
-      );
-
-      // Animate instruction steps with stagger
       gsap.fromTo(
         ".instruction-step",
         { y: 80, opacity: 0 },
@@ -109,15 +96,6 @@ export function InstructionsSection({
     >
       {/* Section Header */}
       <div className="instructions-header mb-20">
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
-        >
-          {t("instructions.title")}
-        </motion.h2>
         <motion.div
           initial={{ width: 0 }}
           whileInView={{ width: 96 }}
@@ -125,9 +103,27 @@ export function InstructionsSection({
           viewport={{ once: true }}
           className="h-1 bg-brand-black"
         />
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          viewport={{ once: true }}
+          className="text-3xl sm:text-4xl md:text-5xl font-bold mt-6"
+        >
+          {t("instructions.title")}
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.7 }}
+          viewport={{ once: true }}
+          className="text-lg sm:text-xl md:text-2xl font-light mt-4 max-w-2xl"
+        >
+          {t("instructions.subtitle")}
+        </motion.p>
       </div>
 
-      {/* Instructions */}
+      {/* Instructions Steps */}
       <div className="max-w-6xl mx-auto space-y-16 sm:space-y-24 md:space-y-32">
         {instructionsData.map((instruction, index) => (
           <motion.div
@@ -152,44 +148,6 @@ export function InstructionsSection({
                 index % 2 === 0 ? "" : "lg:grid-flow-col-dense"
               }`}
             >
-              {/* Text Content */}
-              <div
-                className={`${index % 2 === 0 ? "order-2 lg:order-1" : "order-2"}`}
-              >
-                <div className="mb-8">
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    whileInView={{ opacity: 0.1, scale: 1 }}
-                    transition={{ duration: 1, delay: 0.2 }}
-                    viewport={{ once: true }}
-                    className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-thin text-brand-black/10 mb-2 sm:mb-4"
-                  >
-                    {instruction.step}
-                  </motion.div>
-
-                  <motion.h3
-                    initial={{ opacity: 0, x: -30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, delay: 0.4 }}
-                    viewport={{ once: true }}
-                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold mb-2 sm:mb-4"
-                  >
-                    {t(`instructions.step${instruction.step}.title`)}
-                  </motion.h3>
-
-                  <motion.p
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 0.7, x: 0 }}
-                    transition={{ duration: 0.8, delay: 0.6 }}
-                    viewport={{ once: true }}
-                    className="text-base sm:text-lg md:text-xl text-brand-black/70 font-light"
-                  >
-                    {t(`instructions.step${instruction.step}.description`)}
-                  </motion.p>
-                </div>
-              </div>
-
-              {/* Image with advanced effects */}
               <div
                 className={`${index % 2 === 0 ? "order-1 lg:order-2" : "order-1"}`}
               >
@@ -201,9 +159,6 @@ export function InstructionsSection({
                   }}
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 >
-                  {/* Background that matches page exactly */}
-                  <div className="absolute inset-0 bg-cream-50"></div>
-
                   <motion.img
                     src={instruction.image}
                     alt={`Step ${instruction.step}: ${instruction.title}`}
@@ -215,7 +170,6 @@ export function InstructionsSection({
                     animate={
                       instruction.step === 1 && shouldAnimateStep1
                         ? {
-                            // Realistic turn upside down animation - mobile optimized
                             rotate: [0, 45, 90, 135, 180],
                             scale:
                               window.innerWidth < 768
@@ -225,13 +179,15 @@ export function InstructionsSection({
                           }
                         : instruction.step === 2 && shouldAnimateStep2
                           ? {
-                              // Mezzo giro fluido
                               rotate: 180,
                               scale: window.innerWidth < 768 ? 1.8 : 2.2,
+                              transition: {
+                                duration: 0.8,
+                                ease: "easeInOut",
+                              },
                             }
                           : instruction.step === 3 && shouldAnimateStep3
                             ? {
-                                // Moderate shake animation for step 3
                                 x: [0, -8, 8, -6, 6, -4, 4, 0],
                                 y: [0, -4, 4, -3, 3, -2, 2, 0],
                                 rotate: [0, -2, 2, -1.5, 1.5, -1, 1, 0],
@@ -274,87 +230,60 @@ export function InstructionsSection({
                       scale: window.innerWidth < 768 ? 1.8 : 2.2,
                     }}
                     whileHover={
-                      window.innerWidth >= 768 && instruction.step === 1
-                        ? {
-                            rotate: [0, 180, 360],
-                            transition: { duration: 1.5, ease: "easeInOut" },
-                          }
-                        : window.innerWidth >= 768 && instruction.step === 2
+                      window.innerWidth >= 768
+                        ? instruction.step === 1
                           ? {
-                              x: [-20, 20, -15, 15, -10, 10, 0],
-                              y: [-10, 10, -8, 8, -5, 5, 0],
-                              transition: { duration: 0.8, ease: "easeInOut" },
+                              rotate: [0, 180, 360],
+                              transition: {
+                                duration: 1.5,
+                                ease: "easeInOut",
+                              },
                             }
-                          : {}
+                          : instruction.step === 2
+                            ? {
+                                x: [-20, 20, -15, 15, -10, 10, 0],
+                                y: [-10, 10, -8, 8, -5, 5, 0],
+                                transition: {
+                                  duration: 0.8,
+                                  ease: "easeInOut",
+                                },
+                              }
+                            : {}
+                        : {}
+                    }
+                    whileTap={
+                      window.innerWidth < 768
+                        ? instruction.step === 1
+                          ? {
+                              rotate: [0, 180],
+                              transition: {
+                                duration: 0.8,
+                                ease: "easeInOut",
+                              },
+                            }
+                          : instruction.step === 2
+                            ? {
+                                scale: 1.85,
+                                rotate: [0, 180],
+                                transition: {
+                                  duration: 0.8,
+                                  ease: "easeInOut",
+                                },
+                              }
+                            : instruction.step === 3
+                              ? {
+                                  x: [-10, 10, -8, 8, -5, 5, 0],
+                                  y: [-5, 5, -4, 4, -2, 2, 0],
+                                  transition: {
+                                    duration: 0.4,
+                                    ease: "easeInOut",
+                                  },
+                                }
+                              : {}
+                        : {}
                     }
                     viewport={{ once: true }}
                   />
-
-                  {/* Seamless integration overlay */}
-                  <div className="absolute inset-0 bg-gradient-radial from-transparent via-cream-50/20 to-cream-50/40 z-20 pointer-events-none"></div>
-
-                  {/* Enhanced particle effects for both actions */}
-                  {instruction.step === 1 && shouldAnimateStep1 && (
-                    <div className="absolute inset-0 pointer-events-none">
-                      {/* Turn motion trails */}
-                      {Array.from({ length: 8 }).map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="absolute w-1 h-8 bg-blue-300/40 rounded-full"
-                          style={{
-                            left: `${30 + i * 5}%`,
-                            top: `${40 + Math.random() * 20}%`,
-                            transformOrigin: "center bottom",
-                          }}
-                          animate={{
-                            rotate: [0, 45, 90, 135, 180],
-                            opacity: [0, 0.8, 0.6, 0.4, 0],
-                            scale: [0.5, 1, 0.8, 0.6, 0.3],
-                          }}
-                          transition={{
-                            duration: 3,
-                            repeat: Infinity,
-                            delay: i * 0.2,
-                            ease: [0.25, 0.46, 0.45, 0.94],
-                            repeatDelay: 2,
-                          }}
-                        />
-                      ))}
-                    </div>
-                  )}
-
-                  {instruction.step === 2 && shouldAnimateStep2 && (
-                    <div className="absolute inset-0 pointer-events-none">
-                      {/* Shake effect particles */}
-                      {Array.from({ length: 20 }).map((_, i) => (
-                        <motion.div
-                          key={i}
-                          className="absolute bg-yellow-300 rounded-full"
-                          style={{
-                            left: `${20 + Math.random() * 60}%`,
-                            top: `${20 + Math.random() * 60}%`,
-                            width: `${2 + Math.random() * 3}px`,
-                            height: `${2 + Math.random() * 3}px`,
-                          }}
-                          animate={{
-                            x: [0, -4, 4, -3, 3, -2, 2, 0],
-                            y: [0, -6, 6, -4, 4, -3, 3, 0],
-                            opacity: [0, 0.6, 0.8, 0.7, 0.5, 0.4, 0.2, 0],
-                            scale: [0, 1, 1.2, 1.1, 1.1, 0.9, 0.7, 0],
-                          }}
-                          transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            delay: Math.random() * 1.5,
-                            ease: [0.25, 0.1, 0.25, 1],
-                            repeatDelay: 2.5,
-                          }}
-                        />
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Hover overlay */}
                   <motion.div
                     className="absolute inset-0 bg-brand-black/0 transition-all duration-300 group-hover:bg-brand-black/10"
                     initial={{ opacity: 0 }}
@@ -362,12 +291,45 @@ export function InstructionsSection({
                   />
                 </motion.div>
               </div>
+              <div
+                className={`${
+                  index % 2 === 0 ? "order-2 lg:order-1" : "order-2"
+                } space-y-4`}
+              >
+                <motion.span
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  viewport={{ once: true }}
+                  className="text-sm font-medium tracking-widest text-brand-black/60 uppercase"
+                >
+                  {t("instructions.stepPrefix")} {instruction.step}
+                </motion.span>
+                <motion.h3
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  viewport={{ once: true }}
+                  className="text-2xl sm:text-3xl md:text-4xl font-bold"
+                >
+                  {instruction.title}
+                </motion.h3>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                  viewport={{ once: true }}
+                  className="text-lg sm:text-xl font-light text-brand-black/80"
+                >
+                  {instruction.description}
+                </motion.p>
+              </div>
             </div>
           </motion.div>
         ))}
       </div>
 
-      {/* Bottom quote with reveal animation */}
+      {/* Quote Section */}
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}

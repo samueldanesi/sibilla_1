@@ -128,7 +128,7 @@ export function HeroSection({ productData }: HeroSectionProps) {
             <motion.img
               src={productData.images.hero}
               alt="Sibilla sparkling wine bottle"
-              className="w-full h-full object-contain filter drop-shadow-2xl"
+              className="w-full h-full object-contain filter drop-shadow-2xl mt-[-4rem] md:mt-0"
               initial={{ opacity: 0, y: 100, scale: 1.8 }}
               animate={{
                 opacity: 1,
@@ -140,11 +140,16 @@ export function HeroSection({ productData }: HeroSectionProps) {
                 ease: [0.215, 0.61, 0.355, 1],
                 delay: 0.3,
               }}
-              whileHover={{
-                scale: window.innerWidth < 768 ? 1.85 : 2.25,
+              whileHover={window.innerWidth >= 768 ? {
+                scale: 2.25,
                 y: -10,
                 transition: { duration: 0.3 },
-              }}
+              } : {}}
+              whileTap={window.innerWidth < 768 ? {
+                scale: 1.85,
+                y: -10,
+                transition: { duration: 0.3 },
+              } : {}}
             />
           </div>
         </motion.div>
