@@ -86,7 +86,18 @@ export function InstructionsSection({
     return () => ctx.revert();
   }, [inView]);
 
-  if (!instructionsData || instructionsData.length === 0) return null;
+  // Swap steps 1 and 2
+  const swappedInstructionsData = instructionsData.map(instruction => {
+    if (instruction.step === 1) {
+      return { ...instruction, step: 2 };
+    }
+    if (instruction.step === 2) {
+      return { ...instruction, step: 1 };
+    }
+    return instruction;
+  });
+
+  if (!swappedInstructionsData || swappedInstructionsData.length === 0) return null;
 
   return (
     <section
@@ -125,7 +136,7 @@ export function InstructionsSection({
 
       {/* Instructions Steps */}
       <div className="max-w-6xl mx-auto space-y-16 sm:space-y-24 md:space-y-32">
-        {instructionsData.map((instruction, index) => (
+        {swappedInstructionsData.map((instruction, index) => (
           <motion.div
             key={instruction.step}
             ref={
@@ -170,15 +181,17 @@ export function InstructionsSection({
                     animate={
                       instruction.step === 1 && shouldAnimateStep1
                         ? {
-                            rotate: [0, 45, 90, 135, 180],
-                            scale:
-                              window.innerWidth < 768
-                                ? [1.8, 1.7, 1.6, 1.7, 1.8]
-                                : [2.2, 2.1, 2.0, 2.1, 2.2],
-                            y: [0, -10, -20, -10, 0],
+                            // Step 1 - Ora scuotimento invece di rotazione
+                            x: [-15, 15, -12, 12, -8, 8, -4, 4, 0],
+                            y: [-8, 8, -6, 6, -4, 4, -2, 2, 0],
+                            rotate: [-2, 2, -1.5, 1.5, -1, 1, -0.5, 0.5, 0],
+                            scale: window.innerWidth < 768 
+                              ? [1.8, 1.82, 1.78, 1.81, 1.79, 1.8] 
+                              : [2.2, 2.22, 2.18, 2.21, 2.19, 2.2]
                           }
                         : instruction.step === 2 && shouldAnimateStep2
                           ? {
+                              // Step 2 - Rotazione fluida mantenuta
                               rotate: 180,
                               scale: window.innerWidth < 768 ? 1.8 : 2.2,
                               transition: {
@@ -201,13 +214,15 @@ export function InstructionsSection({
                     transition={
                       instruction.step === 1
                         ? {
-                            duration: 3,
+                            // Step 1 - Transizione scuotimento
+                            duration: 2.5,
                             repeat: Infinity,
-                            ease: [0.25, 0.46, 0.45, 0.94],
-                            repeatDelay: 2,
+                            ease: "easeInOut",
+                            repeatDelay: 1.5,
                           }
                         : instruction.step === 2
                           ? {
+                              // Step 2 - Transizione rotazione
                               duration: 1.2,
                               ease: [0.215, 0.61, 0.355, 1],
                             }
@@ -233,18 +248,20 @@ export function InstructionsSection({
                       window.innerWidth >= 768
                         ? instruction.step === 1
                           ? {
-                              rotate: [0, 180, 360],
+                              // Step 1 - Hover scuotimento
+                              x: [-20, 20, -15, 15, -10, 10, 0],
+                              y: [-10, 10, -8, 8, -5, 5, 0],
                               transition: {
-                                duration: 1.5,
+                                duration: 0.8,
                                 ease: "easeInOut",
                               },
                             }
                           : instruction.step === 2
                             ? {
-                                x: [-20, 20, -15, 15, -10, 10, 0],
-                                y: [-10, 10, -8, 8, -5, 5, 0],
+                                // Step 2 - Hover rotazione
+                                rotate: [0, 180, 360],
                                 transition: {
-                                  duration: 0.8,
+                                  duration: 1.5,
                                   ease: "easeInOut",
                                 },
                               }
@@ -255,7 +272,9 @@ export function InstructionsSection({
                       window.innerWidth < 768
                         ? instruction.step === 1
                           ? {
-                              rotate: [0, 180],
+                              // Step 1 - Tap scuotimento per mobile
+                              x: [-15, 15, -12, 12, -8, 8, -4, 4, 0],
+                              y: [-8, 8, -6, 6, -4, 4, -2, 2, 0],
                               transition: {
                                 duration: 0.8,
                                 ease: "easeInOut",
@@ -263,6 +282,7 @@ export function InstructionsSection({
                             }
                           : instruction.step === 2
                             ? {
+                                // Step 2 - Tap rotazione per mobile
                                 scale: 1.85,
                                 rotate: [0, 180],
                                 transition: {
