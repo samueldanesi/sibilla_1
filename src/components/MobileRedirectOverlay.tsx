@@ -151,7 +151,7 @@ export function MobileRedirectOverlay({
               <div className="w-48 h-48 mx-auto bg-white p-4 rounded-lg relative overflow-hidden shadow-lg">
                 {/* Real QR Code Image */}
                 <img
-                  src="https://cdn.builder.io/api/v1/assets/068663b3092b4939934abff927b6d1c8/senza-titolo-b977af?format=webp&width=800"
+                  src="/qr-code.png"
                   alt="QR Code"
                   className="w-full h-full object-contain"
                 />
